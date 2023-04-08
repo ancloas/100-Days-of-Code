@@ -27,12 +27,17 @@ def represent_account(a):
 def game_higher_lower(a=None, score=0):
     if a==None:
         a=random.choice(data)   
+    
     b= random.choice(data)   
+    while b==a:
+        b= random.choice(data, )   
+
+    
+    print(logo)
 
     if score>0:
         print(f"You're right! your current score is {score}")
 
-    print(logo)
     print('Compare A: '+ represent_account(a))
     print(vs)
     print('Against B: '+ represent_account(b))
@@ -47,7 +52,7 @@ def game_higher_lower(a=None, score=0):
     
 
     print(logo)
-    print(f"Sorry that's wrong, final score: {score}")
+    print(f"Sorry that's wrong, final score: {score},{a['name']}'s followers are {a['follower_count']}m, while {b['name']}'s followers are  {b['follower_count']}m")
     return
 
 
