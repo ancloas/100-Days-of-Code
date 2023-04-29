@@ -47,11 +47,11 @@ class Snake_Segment(Turtle):
 
 
     def get_top(self):
-        return self.ycor() + self.width/2 # type: ignore
+        return self.ycor() + self.height/2 # type: ignore
 
 
     def get_bottom(self):
-        return self.ycor() - self.width/2 # type: ignore
+        return self.ycor() - self.height/2 # type: ignore
     
     def collision_with_segment(self, segment):
         if self.get_right() > segment.get_left() and self.get_left() < segment.get_right():             
