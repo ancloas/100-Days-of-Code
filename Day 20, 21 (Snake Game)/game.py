@@ -3,7 +3,7 @@ import time
 from snake import Snake
 from food import Food
 from random import randint
-
+from scoreboard import Scoreboard
 
 SCREEN_WIDTH=600
 SCREEN_HEIGHT=600
@@ -18,11 +18,8 @@ screen.tracer(0) # turn off animation
 ## Create Snake
 snake=Snake(180,'green')
 food= Food((randint(-SCREEN_WIDTH//2 , SCREEN_WIDTH//2), randint(-SCREEN_HEIGHT//2, SCREEN_HEIGHT//2)))
-score_writer=Turtle(visible=False)
-score_writer.color('yellow')
-score_writer.penup()
-score_writer.setposition(0,280)
-score_writer.penup()
+score_writer=Scoreboard()
+
 
 game_is_on=True
 
@@ -30,17 +27,17 @@ game_is_on=True
 
 while game_is_on==True:
     screen.update()
-    score_writer.clear()
-    score_writer.write(f'Score: {snake.points}')
+    score_writer.update_scoreboard()
     time.sleep(.1)    
     if food.is_eaten(snake):
-        snake.eats_food()
+        snake.grow_tail()
+        score_writer.increase_score()
         food.setposition(randint(-SCREEN_WIDTH//2 +10 , SCREEN_WIDTH//2-10), randint(-SCREEN_HEIGHT//2 +10, SCREEN_HEIGHT//2 -10))
         print(food.position())
 
-    if snake.is_hitwall(Wall_Width=SCREEN_WIDTH,Wall_height=SCREEN_HEIGHT):
-        game_is_on=False    
-
+    if snake.is_hitwall(Wall_Width=SCREEN_WIDTH,Wall_height=SCREEN_HEIGHT) or snake.is_hitself():
+        score_writer.reset()  
+        snake.reset()
     snake.start_moveing()
 
     screen.onkey(fun=snake.up, key='Up')

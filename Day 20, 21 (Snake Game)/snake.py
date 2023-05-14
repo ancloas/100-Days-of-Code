@@ -16,8 +16,8 @@ class Snake_Segment(Turtle):
         self.color(color)
         self.penup()
         self.shapesize(0.5, 0.5)
-        self.width=self.shapesize()[0]*20
-        self.height=self.shapesize()[1]*20
+        self.width=self.shapesize()[0]*20.0
+        self.height=self.shapesize()[1]*20.0
     
     
 
@@ -54,17 +54,17 @@ class Snake_Segment(Turtle):
         return self.ycor() - self.height/2 # type: ignore
     
     def collision_with_segment(self, segment):
-        if self.get_right() > segment.get_left() and self.get_left() < segment.get_right():             
-            if self.get_top() > segment.get_bottom() and self.get_bottom() < segment.get_top():        
+        if int(self.get_right()) >int(segment.get_left()) and int(self.get_left()) < int(segment.get_right()):             
+            if int(self.get_top()) > int(segment.get_bottom()) and int(self.get_bottom()) < int(segment.get_top()):        
                 return True
-        
+        return False    
 
 
 class Snake:
     def __init__(self, direction, color) -> None:
         STARTING_POS=(0,0)        
         self.body=[]
-        self.MOVE_DISTANCE=20 ## Move Distance
+        self.MOVE_DISTANCE=20.0 ## Move Distance
         self.points=0
         self.color=color
         for i in range(3):
@@ -108,12 +108,6 @@ class Snake:
         if  self.head.heading()==UP:
             return
         self.head.setheading(DOWN)
-
-
-    def eats_food(self):
-        self.points+=1
-        self.grow_tail()
-
     
     def is_hitself(self):
         for i in range(1,len(self.body)):
@@ -131,5 +125,8 @@ class Snake:
             return True
 
 
-
-
+    def reset(self):
+        for segment in self.body:
+            segment.goto(5000, 5000)
+            segment.clear()
+        self.__init__(RIGHT, 'green')
