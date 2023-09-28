@@ -4,6 +4,31 @@ import os
 from tkinter import messagebox
 from password_generation_code import generate_random_password
 import pyperclip
+import json
+
+#------------------------------Search-------------------------------------------#
+def search():
+    query_website=website_input.get()
+    if not(query_website):
+        messagebox.showerror(title='error', message="Please enter website to be searched")
+        return
+
+    creds_fils_path = './Passwsord Generator/credentials.json'
+    
+    try:
+        with open(creds_fils_path, 'r') as data_file:
+            credentials=json.load(data_file)
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
+        credentials={}
+    
+    try:
+        messagebox.showinfo(title=query_website, message=f"Email: {credentials[query_website]['Email']}\nPassword: {credentials[query_website]['Password']}")
+    except KeyError:
+        messagebox.showinfo(title='Not Found', message=f"Credentials not found for {query_website}") 
+
+
+
+
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
@@ -15,45 +40,38 @@ def generate_password():
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 def save_password():
-    credentials={}
-    credentials['Website'] = website_input.get()
-    credentials['Email'] = email_input.get()
-    credentials['Password'] = pass_input.get()
-
-    if not(credentials['Website']) or not(credentials['Email']) or not(credentials['Password']):
+    new_website=website_input.get()
+    new_email=email_input.get()
+    new_password=pass_input.get()
+    
+    # return if fields are empty
+    if not(new_website) or not(new_email) or not(new_password):
         messagebox.showerror(title='error', message="You can't leave any field empty")
         return
 
-    is_ok= messagebox.askokcancel(title='save password', message=f'These are the details: \nWebsite: {credentials["Website"]} \nEmail: {credentials["Email"]}\nPassword: {credentials["Password"]}\n Is it ok to save?')
-    
-    if not is_ok:
-        return
-    
-    # Define the CSV file path
-    csv_file_path = './Passwsord Generator/credentials.csv'
-    
-    # Create a DataFrame from the data
-    data = [[credentials['Website'], credentials['Email'], credentials['Password']]]
+    # Define the json file path
+    creds_fils_path = './Passwsord Generator/credentials.json'
 
-    
     # check if file not present add headers
-    if not os.path.isfile(csv_file_path):
-        with open(csv_file_path, 'w') as file:
-            file.write("Website\tEmail\tPassword\n")
-
-
-    existing_df= pd.read_csv(csv_file_path, sep='\t')
-    df = pd.DataFrame(data, columns=["Website", "Email", "Password"])
-
-    df_updated = pd.concat([existing_df, df], ignore_index=True)
-
-
-    # Append the DataFrame to the CSV file with tab separator
-    df_updated.to_csv(csv_file_path, sep='\t', index=False)
-    website_input.delete(0, END)
-    pass_input.delete(0, END)
-    email_input.delete(0, END)
-    email_input.insert(0, df_updated['Email'].mode().to_list()[0])
+    try:
+        with open(creds_fils_path, 'r') as data_file:
+            credentials=json.load(data_file)
+    except (FileNotFoundError, json.decoder.JSONDecodeError):
+        credentials={}
+    else:
+        #add new data
+        credentials[new_website] = {
+            "Email": new_email, "Password": new_password
+        }
+    
+        # check if file not present add headers
+        with open(creds_fils_path, 'w') as data_file:
+            json.dump(credentials, data_file, indent=4)
+    finally:        
+        website_input.delete(0, END)
+        pass_input.delete(0, END)
+        email_input.delete(0, END)
+        email_input.insert(0, 'anugrahgupta.52@gmail.com')
     
 
 
@@ -90,10 +108,10 @@ pass_label.grid(row=3, column=0)
 # Website inpput
 
 #Text
-website_input = Entry(width=52)
+website_input = Entry(width=40)
 website_input.focus()
 # website_input.insert(END, "enter website name")
-website_input.grid(row=1, column=1, columnspan=2)
+website_input.grid(row=1, column=1,columnspan=2,sticky=W)
 
 # Input Email
 email_input = Entry(width=52)
@@ -105,6 +123,10 @@ email_input.insert(0, 'anugrahgupta.52@gmail.com')
 pass_input = Entry(width=33)
 # pass_input.insert(END, "enter password")
 pass_input.grid(row=3, column=1)
+# Button: Generate Password
+button_search = Button(text="Search", command=search, width=9)
+button_search.grid(row=1, column=2,  sticky=E)
+
 # Button: Generate Password
 button_generate_password = Button(text="Generate Password", command=generate_password)
 button_generate_password.grid(row=3, column=2)
