@@ -8,7 +8,10 @@ dict={row.letter: row.code for (index,row) in df.iterrows()}
 #TODO 2. Create a list of the phonetic code words from a word that the user inputs.
 
 def phonetic_word_list(input: str):
-    return [dict[char.upper()] for char in input]
+    try:
+        return [dict[char.upper()] for char in input]
+    except KeyError:
+        return "Sorry, only letters in the alphabet please"
 
-
-print(phonetic_word_list('Anugrah'))
+input_str= input()
+print(phonetic_word_list(input_str))
