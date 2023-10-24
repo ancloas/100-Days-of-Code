@@ -21,4 +21,4 @@ def send_message(to='+918269301199', mssg_body='Hello! Yohohhoh'):
     print(message.status)
 
 
-send_message('+918269301199', 'Hello! I think it will rain today, So get your umberalla')
+# send_message('+918269301199', 'Hello! I think it will rain today, So get your umberalla')

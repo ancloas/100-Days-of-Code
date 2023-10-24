@@ -40,8 +40,10 @@ def rain_alert(city_name):
     df['date']=pd.to_datetime(df['date'])
     df = df[(df['date'] >= going_off_time) & (df['date'] <= get_back_time)]
     result = df['icon'].isin(rain_alert_icon).any()
+    print(result, type(result))
     if result:
         send_message(mssg_body='Helllo! I thing today it will rain, so get your umberalla')
-
+    return result
+    
 # print(get_current_weather_info('indore', 'IN'))
 print(rain_alert('delhi'))
