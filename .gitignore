@@ -1,3 +1,6 @@
 Passwsord Generator/credentials.csv
 .env
 data/birthdays.csv
+__pycache__/song_extraction.cpython-311.pyc
+.gitignore
+__pycache__/spotify.cpython-311.pyc
